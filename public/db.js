@@ -38,10 +38,11 @@ const request = indexedDB.open('BudgetDB', budgetVersion || 21);
 
 request.onupgradeneeded = e => {
     console.log('IndexedDB upgrade needed');
-    !db.objectStoreNames.includes('BudgetStore') ?
-        db.createObjectStore('BudgetStore', { autoIncrement: true })
-        :
-        console.log('Datastore already exists');
+    db = e.target.result;
+    console.log(db.objectStoreNames)
+    if (db.objectStoreNames.length === 0) {
+        db.createObjectStore('BudgetStore', { autoIncrement: true });
+    }
 };
 request.onerror = e => console.log(e.target.errorCode);
 request.onsuccess = e => {
